@@ -1,0 +1,48 @@
+package com.multibank.main.controllers;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.multibank.main.models.TransactionRequest;
+import com.multibank.main.services.TransactionService;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+
+@RestController
+@RequestMapping("/api/transaction")
+public class TransactionController {
+
+    private final TransactionService transactionService;
+
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
+
+    @PostMapping("/withdrawal")
+    public ResponseEntity<String> withdrawalCash(@RequestBody TransactionRequest withdrawalRequest) {
+        
+        try {
+            transactionService.withdrawalCash(withdrawalRequest.getAccountNumber(), withdrawalRequest.getAmount());
+            return ResponseEntity.status(200).body(String.format("Withdrawal of amount %f successfull", withdrawalRequest.getAmount()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/deposit")
+    public ResponseEntity<String> depositCash(@RequestBody TransactionRequest depositRequest) {
+        
+        try {
+            transactionService.depositCash(depositRequest.getAccountNumber(), depositRequest.getAmount());
+            return ResponseEntity.ok().body("Deposit Successfull");
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    
+}
