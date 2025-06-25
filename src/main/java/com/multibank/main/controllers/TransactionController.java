@@ -26,7 +26,7 @@ public class TransactionController {
         
         try {
             transactionService.withdrawalCash(withdrawalRequest.getAccountNumber(), withdrawalRequest.getAmount());
-            return ResponseEntity.status(200).body(String.format("Withdrawal of amount %f successfull", withdrawalRequest.getAmount()));
+            return ResponseEntity.status(200).body(String.format("Withdrawal successful"));
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }
@@ -37,7 +37,7 @@ public class TransactionController {
         
         try {
             transactionService.depositCash(depositRequest.getAccountNumber(), depositRequest.getAmount());
-            return ResponseEntity.ok().body("Deposit Successfull");
+            return ResponseEntity.ok().body("Deposit Successful");
 
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
