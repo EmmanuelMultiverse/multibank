@@ -6,11 +6,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.multibank.main.models.TransactionRequest;
 import com.multibank.main.services.TransactionService;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/api/transaction")
 public class TransactionController {
@@ -24,8 +26,10 @@ public class TransactionController {
     @PostMapping("/withdrawal")
     public ResponseEntity<String> withdrawalCash(@RequestBody TransactionRequest withdrawalRequest) {
         
+        log.info("Initializing withdrawal from account: {}", withdrawalRequest.getAccountNumber());
         try {
             transactionService.withdrawalCash(withdrawalRequest.getAccountNumber(), withdrawalRequest.getAmount());
+            log.info("Finished withdrawal!");
             return ResponseEntity.status(200).body(String.format("Withdrawal successful"));
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(e.getMessage());
